@@ -34,7 +34,7 @@ Go-validator ： 代码层面的一个校验脚手架
   - 查询B站的爬虫视频信息
 
 
-`	
+```	
 加入片段记录
 
 beego.Router("/api/add_video_note_info", &controllers.AddController{}, "post:AddTwoSetVideoInfo")
@@ -50,4 +50,4 @@ beego.Router("/api/query_youtube_video_list", &controllers.QueryController{}, "p
 查询B站的爬虫视频信息
 
 beego.Router("/api/query_bilibili_video_list", &controllers.QueryController{}, "post:ShowBiliBiliVideoList")
-`
+```
