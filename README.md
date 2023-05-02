@@ -17,3 +17,30 @@ Gorm ： gorm是一个使用Go语言编写的ORM框架。它文档齐全，对�
 有中文文档：https://gorm.io/zh_CN/docs/  
 
 Go-validator ： 代码层面的一个校验脚手架
+
+日志打印：zap
+
+
+# TodoList
+
+## 第一期
+
+- 重写核心功能如下
+  - 添加片段记录，后续成为Note（某个线上视频，或者其他线上内容值得注意的点）
+  - 检索现有已经添加的片段记录
+  - youtube的爬虫（因为需要网络梯子支持）
+  - b站的爬虫（直接用定时任务写在后端）
+  - youtube的爬虫视频信息
+  - 查询B站的爬虫视频信息
+
+
+`	
+加入片段记录
+beego.Router("/api/add_video_note_info", &controllers.AddController{}, "post:AddTwoSetVideoInfo")
+查询一个已登录的片段信息
+beego.Router("/api/query_video_info", &controllers.QueryController{}, "post:ShowVideoInfo")
+查询youtube的爬虫视频信息
+beego.Router("/api/query_youtube_video_list", &controllers.QueryController{}, "post:ShowYoutubeVideoList")
+查询B站的爬虫视频信息
+beego.Router("/api/query_bilibili_video_list", &controllers.QueryController{}, "post:ShowBiliBiliVideoList")
+`
