@@ -1,12 +1,11 @@
 package main
 
 import (
+	"awesomeProject/middleware/db"
 	"awesomeProject/routes"
-	"fmt"
+	"database/sql"
 	"github.com/go-ini/ini"
 	"go.uber.org/zap"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 func main() {
@@ -22,18 +21,15 @@ func main() {
 		return
 	}
 	// 加载数据库
-	cfgSection := cfg.Section("database")
-	dbInfo := fmt.Sprintf("%s:%s@tcp(%s)/%s",
-		cfgSection.Key("User"),
-		cfgSection.Key("Password"),
-		cfgSection.Key("Host"),
-		cfgSection.Key("Schema"))
-	logger.Info(dbInfo)
-	_, dbErr := gorm.Open(mysql.Open(dbInfo), &gorm.Config{})
-	if dbErr != nil {
-		logger.Error("failed to connect database",
-			zap.Error(dbErr))
-		panic("failed to connect database")
+	db.InitDb(cfg)
+	if db.DB != nil {
+		db, _ := db.DB.DB()
+		defer func(db *sql.DB) {
+			err := db.Close()
+			if err != nil {
+
+			}
+		}(db)
 	}
 	// 加载路由
 	r := routes.SetupRouter()

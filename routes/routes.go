@@ -12,6 +12,6 @@ func SetupRouter() *gin.Engine {
 
 	// Ping test
 	r.GET("/ping", serverCore.PingHander)
-
+	r.GET("/db-demo", serverCore.DBQueryDemo)
 	return r
 }
