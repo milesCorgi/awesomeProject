@@ -11,7 +11,12 @@
 # 选型
 
 gin ： web框架，比beego精简。是有中文文档的：https://gin-gonic.com/zh-cn/docs/  
-当然也有很多这样的中文教程：https://eddycjy.gitbook.io/golang/di-3-ke-gin/api-01  
+
+当然也有很多这样的中文教程：
+
+https://eddycjy.gitbook.io/golang/di-3-ke-gin/api-01  
+
+https://zhuanlan.zhihu.com/p/614838910
 
 Gorm ： gorm是一个使用Go语言编写的ORM框架。它文档齐全，对开发者友好，支持主流数据库。  
 有中文文档：https://gorm.io/zh_CN/docs/  
@@ -20,6 +25,18 @@ Go-validator ： 代码层面的一个校验脚手架
 
 日志打印：zap
 
+https://segmentfault.com/a/1190000022461706
+
+定时任务：https://github.com/xxl-job/xxl-job-executor-go  我们熟悉的xxl-job
+
+单元测试：
+还不熟，考虑以下两个
+
+gomock  https://github.com/golang/mock
+
+Mockey https://github.com/bytedance/mockey
+
+↑这个还有点像mockito
 
 # TodoList
 
