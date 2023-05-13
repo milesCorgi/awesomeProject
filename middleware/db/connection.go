@@ -1,6 +1,7 @@
 package db
 
 import (
+	"awesomeProject/middleware/log"
 	"fmt"
 	"github.com/go-ini/ini"
 	"go.uber.org/zap"
@@ -13,24 +14,23 @@ var (
 )
 
 func InitDb(cfg *ini.File) {
-	logger := zap.NewExample()
-	defer logger.Sync()
+
 	cfgSection := cfg.Section("database")
-	dbInfo := fmt.Sprintf("%s:%s@tcp(%s)/%s",
+	dbInfo := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true",
 		cfgSection.Key("User"),
 		cfgSection.Key("Password"),
 		cfgSection.Key("Host"),
 		cfgSection.Key("Schema"))
-	logger.Info(dbInfo)
+	log.Logger.Info(dbInfo)
 	db, dbErr := gorm.Open(mysql.Open(dbInfo), &gorm.Config{})
 	if dbErr != nil {
-		logger.Error("failed to connect database",
+		log.Logger.Error("failed to connect database",
 			zap.Error(dbErr))
 		panic("failed to connect database")
 	}
 	sqlDB, _ := db.DB()
 	if err := sqlDB.Ping(); err != nil {
-		logger.Error(err.Error())
+		log.Logger.Error(err.Error())
 		panic("failed to ping database")
 	}
 	DB = db

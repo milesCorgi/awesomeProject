@@ -2,6 +2,7 @@ package main
 
 import (
 	"awesomeProject/middleware/db"
+	"awesomeProject/middleware/log"
 	"awesomeProject/routes"
 	"database/sql"
 	"github.com/go-ini/ini"
@@ -9,17 +10,17 @@ import (
 )
 
 func main() {
-	// 初始化zap日志
-	logger := zap.NewExample()
-	defer logger.Sync()
+
 	// 加载静态配置文件
 	cfg, errCfgLoadIni := ini.Load("conf/app.ini")
 	if errCfgLoadIni != nil {
-		logger.Error("fail to load ini",
+		log.Logger.Error("fail to load ini",
 			zap.Error(errCfgLoadIni))
 		panic("fail to load ini")
 		return
 	}
+	// 初始化zap日志
+	log.InitLogger(cfg)
 	// 加载数据库
 	db.InitDb(cfg)
 	if db.DB != nil {
@@ -33,6 +34,10 @@ func main() {
 	}
 	// 加载路由
 	r := routes.SetupRouter()
+	// 去除You trusted all proxies, this is NOT safe. 告警
+	// https://github.com/gin-gonic/gin/issues/2809
+	r.SetTrustedProxies(nil)
+	r.Use(log.GinLogger(log.Logger), log.GinRecovery(log.Logger, true))
 	// Listen and Server in 0.0.0.0:8080
 	err := r.Run(":8080")
 	if err != nil {

@@ -18,6 +18,8 @@ https://eddycjy.gitbook.io/golang/di-3-ke-gin/api-01
 
 https://zhuanlan.zhihu.com/p/614838910
 
+gin 路由获取get post请求参数 : https://zhuanlan.zhihu.com/p/474758711
+
 Gorm ： gorm是一个使用Go语言编写的ORM框架。它文档齐全，对开发者友好，支持主流数据库。  
 有中文文档：https://gorm.io/zh_CN/docs/  
 
@@ -26,6 +28,7 @@ Go-validator ： 代码层面的一个校验脚手架
 日志打印：zap
 
 https://segmentfault.com/a/1190000022461706
+https://www.cnblogs.com/you-men/p/14694928.html#_label4
 
 定时任务：https://github.com/xxl-job/xxl-job-executor-go  我们熟悉的xxl-job
 
@@ -44,9 +47,9 @@ Mockey https://github.com/bytedance/mockey
 
 - 重写核心功能如下
   - 添加片段记录，后续成为Note（某个线上视频，或者其他线上内容值得注意的点）
-  - 检索现有已经添加的片段记录
+  - 检索现有已经添加的片段记录  --- done，测试中
   - youtube的爬虫（因为需要网络梯子支持，部署方法待定）（研究用用ssr？）
-  - b站的爬虫（直接用定时任务写在后端）
+  - b站的爬虫（直接用定时任务写在后端 --- > 考虑用上xxl-job）
   - youtube的爬虫视频信息
   - 查询B站的爬虫视频信息
 
