@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.29)
 # Database: two_set_info
-# Generation Time: 2023-05-12 09:46:16 +0000
+# Generation Time: 2023-05-20 14:04:07 +0000
 # ************************************************************
 
 
@@ -21,27 +21,27 @@ SET NAMES utf8mb4;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table bilibili_video_list
+# Dump of table bilibili_video_lists
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `bilibili_video_list`;
+DROP TABLE IF EXISTS `bilibili_video_lists`;
 
-CREATE TABLE `bilibili_video_list` (
+CREATE TABLE `bilibili_video_lists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL DEFAULT '',
   `length` varchar(50) NOT NULL DEFAULT '',
-  `bvid` varchar(50) NOT NULL DEFAULT '',
-  `created` datetime NOT NULL,
-  `pic` varchar(50) NOT NULL DEFAULT '',
+  `video_id` varchar(50) NOT NULL DEFAULT '',
+  `published_at` datetime NOT NULL,
+  `cover_ori` varchar(50) NOT NULL DEFAULT '',
   `video_url` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `索引 2` (`created`)
+  UNIQUE KEY `索引 2` (`published_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-LOCK TABLES `bilibili_video_list` WRITE;
-/*!40000 ALTER TABLE `bilibili_video_list` DISABLE KEYS */;
+LOCK TABLES `bilibili_video_lists` WRITE;
+/*!40000 ALTER TABLE `bilibili_video_lists` DISABLE KEYS */;
 
-INSERT INTO `bilibili_video_list` (`id`, `title`, `length`, `bvid`, `created`, `pic`, `video_url`)
+INSERT INTO `bilibili_video_lists` (`id`, `title`, `length`, `video_id`, `published_at`, `cover_ori`, `video_url`)
 VALUES
 	(1,'乐器互换挑战：小提琴 vs 钢琴','12:56','BV1cU4y1W7A4','2021-02-16 12:20:11','http://i0.hdslb.com/bfs/archive/9b2dda140143ab2e9e','https://www.bilibili.com/video/BV1cU4y1W7A4'),
 	(2,'你弹我猜：用钢琴演奏表现世界各国著名地标景点 ft. Sophie Oui Oui','15:59','BV1xX4y157bN','2021-02-15 11:55:53','http://i0.hdslb.com/bfs/archive/2b4c41de782bf297a5','https://www.bilibili.com/video/BV1xX4y157bN'),
@@ -899,7 +899,7 @@ VALUES
 	(884,'看世界级大师小时候的拉琴名场面','10:07','BV1QX4y157NT','2021-02-19 12:09:15','http:http://i2.hdslb.com/bfs/archive/33e8c60b2d7ba','https://www.bilibili.com/video/BV1QX4y157NT'),
 	(885,'练琴一小时，燃烧多少卡路里？','12:44','BV1uy4y1J7cw','2021-02-18 11:45:13','http:http://i2.hdslb.com/bfs/archive/56e395d9013ee','https://www.bilibili.com/video/BV1uy4y1J7cw');
 
-/*!40000 ALTER TABLE `bilibili_video_list` ENABLE KEYS */;
+/*!40000 ALTER TABLE `bilibili_video_lists` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
@@ -946,12 +946,31 @@ VALUES
 UNLOCK TABLES;
 
 
-# Dump of table video_note_info
+# Dump of table user
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `video_note_info`;
+DROP TABLE IF EXISTS `user`;
 
-CREATE TABLE `video_note_info` (
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) DEFAULT NULL,
+  `user_name` varchar(255) NOT NULL DEFAULT '',
+  `password` varchar(255) DEFAULT NULL,
+  `is_admin` varchar(255) DEFAULT NULL,
+  `add_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_name` (`user_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table video_note_infos
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `video_note_infos`;
+
+CREATE TABLE `video_note_infos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `info` longtext COLLATE utf8mb4_unicode_ci,
   `the_time` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -972,10 +991,10 @@ CREATE TABLE `video_note_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-LOCK TABLES `video_note_info` WRITE;
-/*!40000 ALTER TABLE `video_note_info` DISABLE KEYS */;
+LOCK TABLES `video_note_infos` WRITE;
+/*!40000 ALTER TABLE `video_note_infos` DISABLE KEYS */;
 
-INSERT INTO `video_note_info` (`id`, `info`, `the_time`, `bili_bili_link`, `youtube_link`, `other_link`, `add_time`, `update_time`, `edit_password`, `img_links`, `info_type`, `fan_fiction_link`, `bili_bili_id`, `enable`, `user`, `keyword`, `music_link`)
+INSERT INTO `video_note_infos` (`id`, `info`, `the_time`, `bili_bili_link`, `youtube_link`, `other_link`, `add_time`, `update_time`, `edit_password`, `img_links`, `info_type`, `fan_fiction_link`, `bili_bili_id`, `enable`, `user`, `keyword`, `music_link`)
 VALUES
 	(1,'橙对羊动手动脚','1:00','https://b23.tv/UffO6y','','','2020-12-27 10:40:35','2021-01-16 17:09:28','','','0','','BV1aW41127T5',1,'MilesCorgi','',''),
 	(2,'羊还在悉尼乐团的时候，去喝咖啡时让咖啡师做了twoset咖啡的拉花（橙同时期也干过类似的事情）','4:50','https://b23.tv/seWtKH','','','2020-12-27 10:41:39','2020-12-27 10:41:39','','','0','','BV1254y1v7Hp',1,'MilesCorgi','',''),
@@ -1233,38 +1252,19 @@ VALUES
 	(254,'【ins限动】2021-04-02\n\n看大佬拉琴摧毁自尊的学长','','','','https://streamja.com/A0Bb9','2021-04-04 16:51:03','2021-04-04 16:51:03','','','0','','',1,'MilesLaipp','ins限动',''),
 	(255,'【ins限动】2021-04-01\n\n羊哥的悠闲日常','','','','','2021-04-05 08:49:36','2021-04-05 08:49:36','','https://www.helloimg.com/images/2021/04/05/B7LSgS.png\nhttps://www.helloimg.com/images/2021/04/05/B7LnaC.png','1','','',1,'MilesLaipp','ins限动','');
 
-/*!40000 ALTER TABLE `video_note_info` ENABLE KEYS */;
+/*!40000 ALTER TABLE `video_note_infos` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
-# Dump of table user
+# Dump of table youtube_video_lists
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `youtube_video_lists`;
 
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) DEFAULT NULL,
-  `user_name` varchar(255) NOT NULL DEFAULT '',
-  `password` varchar(255) DEFAULT NULL,
-  `is_admin` varchar(255) DEFAULT NULL,
-  `add_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_name` (`user_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table youtube_video_list
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `youtube_video_list`;
-
-CREATE TABLE `youtube_video_list` (
+CREATE TABLE `youtube_video_lists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `video_id` varchar(50) NOT NULL DEFAULT '',
-  `published_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `published_at` datetime NOT NULL,
   `video_url` varchar(50) NOT NULL DEFAULT '',
   `title` varchar(200) NOT NULL DEFAULT '',
   `cover_ori` varchar(50) NOT NULL DEFAULT '',
@@ -1273,10 +1273,10 @@ CREATE TABLE `youtube_video_list` (
   UNIQUE KEY `索引 2` (`published_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-LOCK TABLES `youtube_video_list` WRITE;
-/*!40000 ALTER TABLE `youtube_video_list` DISABLE KEYS */;
+LOCK TABLES `youtube_video_lists` WRITE;
+/*!40000 ALTER TABLE `youtube_video_lists` DISABLE KEYS */;
 
-INSERT INTO `youtube_video_list` (`id`, `video_id`, `published_at`, `video_url`, `title`, `cover_ori`, `cover_oss`)
+INSERT INTO `youtube_video_lists` (`id`, `video_id`, `published_at`, `video_url`, `title`, `cover_ori`, `cover_oss`)
 VALUES
 	(1,'WZMn6uqrbq8','2014-12-09 04:56:30','https://youtu.be/WZMn6uqrbq8','Clean Bandit - Rather Be - [2Set violin cover]','https://i.ytimg.com/vi/WZMn6uqrbq8/mqdefault.jpg',''),
 	(2,'khZYkAUdoko','2014-11-11 01:49:23','https://youtu.be/khZYkAUdoko','Lord of the Rings - Uruk Hai [2set Violin Cover]','https://i.ytimg.com/vi/khZYkAUdoko/mqdefault.jpg',''),
@@ -2502,7 +2502,7 @@ VALUES
 	(1275,'32UlsJzCC24','2021-12-01 13:30:00','https://youtu.be/32UlsJzCC24','Super advanced rhythm technique','https://i.ytimg.com/vi/32UlsJzCC24/mqdefault.jpg',''),
 	(1276,'aCZUSV4PhF8','2021-12-01 02:15:00','https://youtu.be/aCZUSV4PhF8','What is he doing??','https://i.ytimg.com/vi/aCZUSV4PhF8/mqdefault.jpg','');
 
-/*!40000 ALTER TABLE `youtube_video_list` ENABLE KEYS */;
+/*!40000 ALTER TABLE `youtube_video_lists` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

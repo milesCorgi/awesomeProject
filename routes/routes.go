@@ -2,6 +2,7 @@ package routes
 
 import (
 	"awesomeProject/app/serverCore"
+	"awesomeProject/app/serverCore/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +13,6 @@ func SetupRouter() *gin.Engine {
 
 	// Ping test
 	r.GET("/ping", serverCore.PingHander)
-	r.GET("/db-demo", serverCore.DBQueryDemo)
+	routes.LoadServerCoreRouter(r)
 	return r
 }
