@@ -10,9 +10,9 @@ type QueryVideoInfo struct {
 }
 
 type QueryWebVideoInfo struct {
-	From    string `json:"From" xml:"From"`
-	To      string `json:"To" xml:"To"`
-	IfDesc  string `json:"IfDesc" xml:"IfDesc"`
-	Keyword string `json:"Keyword" xml:"Keyword"`
-	WebName string `json:"WebName" xml:"WebName"`
+	From     string `json:"From" xml:"From"`
+	To       string `json:"To" xml:"To"`
+	IfDesc   string `json:"IfDesc" xml:"IfDesc"`
+	Keyword  string `json:"Keyword" xml:"Keyword"`
+	SourceId int    `json:"SourceId" xml:"SourceId"`
 }

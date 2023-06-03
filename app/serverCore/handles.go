@@ -67,22 +67,35 @@ func ShowVideoInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, wholeResult)
 }
 
-func ShowYoutubeVideoList(c *gin.Context) {
+var SourceMap = map[string]int{"bilibili": 1, "youtube": 2}
 
+func ShowBiliBiliVideoList(c *gin.Context) {
 	var QueryWebVideoInfo dto.QueryWebVideoInfo
 	bindJSONErr := c.ShouldBindJSON(&QueryWebVideoInfo)
 	if bindJSONErr != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": bindJSONErr.Error()})
 		return
 	}
-	QueryWebVideoInfo.WebName = "youtube"
-	log.Logger.Info(fmt.Sprintf("ShowYoutubeVideoList req------------%v", QueryWebVideoInfo))
+	QueryWebVideoInfo.SourceId = SourceMap["bilibili"]
 	wholeResult := map[string]interface{}{"error_num": 400, "msg": "获取萌点失败，请重试或者联系狗狗"}
-	wholeResult = ShowWebVideoList(QueryWebVideoInfo)
+	wholeResult = ShowVideoList(QueryWebVideoInfo)
 	c.JSON(http.StatusOK, wholeResult)
 }
 
-func ShowWebVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interface{} {
+func ShowYoutubeVideoList(c *gin.Context) {
+	var QueryWebVideoInfo dto.QueryWebVideoInfo
+	bindJSONErr := c.ShouldBindJSON(&QueryWebVideoInfo)
+	if bindJSONErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": bindJSONErr.Error()})
+		return
+	}
+	QueryWebVideoInfo.SourceId = SourceMap["youtube"]
+	wholeResult := map[string]interface{}{"error_num": 400, "msg": "获取萌点失败，请重试或者联系狗狗"}
+	wholeResult = ShowVideoList(QueryWebVideoInfo)
+	c.JSON(http.StatusOK, wholeResult)
+}
+
+func ShowVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interface{} {
 
 	// 这里需要注意一个细节,首先将全局的db变量赋值给了Db,如果用db直接进行操作,那一系列的赋值语句将会影响db的地址,影响后续的数据库操作.
 	// https://cloud.tencent.com/developer/article/1374623
@@ -90,7 +103,7 @@ func ShowWebVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interf
 	db.Limit(10000)
 	wholeResult := map[string]interface{}{"error_num": 400, "msg": "获取萌点失败，请重试或者联系狗狗"}
 	// todo:做成分表
-	var YoutubeVideoList []models.YoutubeVideoList
+	var VideoList []models.VideoList
 	log.Logger.Info(fmt.Sprintf("ShowWebVideoList req------------%v", QueryWebVideoInfo))
 	if QueryWebVideoInfo.From == "" && QueryWebVideoInfo.To == "" && QueryWebVideoInfo.Keyword == "" {
 		OrderBy := "published_at"
@@ -101,7 +114,7 @@ func ShowWebVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interf
 		}
 		db = db.Order(OrderBy)
 
-		err := db.Debug().Find(&YoutubeVideoList).Error
+		err := db.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
 		// Limit得放前面才生效
 		if err != nil {
 			log.Logger.Error(err.Error())
@@ -110,8 +123,8 @@ func ShowWebVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interf
 			//for _, Video := range TwoSetVideoInfos {
 			//	logs.Debug(Video)
 			//}
-			wholeResult["total_num"] = len(YoutubeVideoList)
-			wholeResult["info_list"] = YoutubeVideoList
+			wholeResult["total_num"] = len(VideoList)
+			wholeResult["info_list"] = VideoList
 			wholeResult["msg"] = "success"
 			wholeResult["error_num"] = 0
 		}
@@ -139,7 +152,7 @@ func ShowWebVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interf
 		}
 
 		db = db.Order(OrderBy)
-		err := db.Debug().Find(&YoutubeVideoList).Error
+		err := db.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
 		if err != nil {
 			log.Logger.Error(err.Error())
 			return wholeResult
@@ -147,8 +160,8 @@ func ShowWebVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interf
 			//for _, info := range TwoSetVideoInfos {
 			//	logs.Info(info)
 			//}
-			wholeResult["total_num"] = len(YoutubeVideoList)
-			wholeResult["info_list"] = YoutubeVideoList
+			wholeResult["total_num"] = len(VideoList)
+			wholeResult["info_list"] = VideoList
 			wholeResult["msg"] = "success"
 			wholeResult["error_num"] = 0
 		}
