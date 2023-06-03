@@ -23,6 +23,9 @@ gin 路由获取get post请求参数 : https://zhuanlan.zhihu.com/p/474758711
 Gorm ： gorm是一个使用Go语言编写的ORM框架。它文档齐全，对开发者友好，支持主流数据库。  
 有中文文档：https://gorm.io/zh_CN/docs/  
 
+数据库分表： Sharding
+中文说明https://gorm.io/zh_CN/docs/sharding.html
+
 Go-validator ： 代码层面的一个校验脚手架
 
 日志打印：zap
