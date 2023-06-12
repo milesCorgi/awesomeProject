@@ -1,4 +1,4 @@
-package serverCore
+package handles
 
 import (
 	"awesomeProject/app/serverCore/dto"
@@ -99,8 +99,8 @@ func ShowVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interface
 
 	// 这里需要注意一个细节,首先将全局的db变量赋值给了Db,如果用db直接进行操作,那一系列的赋值语句将会影响db的地址,影响后续的数据库操作.
 	// https://cloud.tencent.com/developer/article/1374623
-	db := db.DB
-	db.Limit(10000)
+	dbShowVideoList := db.DB
+	dbShowVideoList.Limit(10000)
 	wholeResult := map[string]interface{}{"error_num": 400, "msg": "获取萌点失败，请重试或者联系狗狗"}
 	// todo:做成分表
 	var VideoList []models.VideoList
@@ -112,9 +112,9 @@ func ShowVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interface
 		} else {
 			OrderBy = "published_at"
 		}
-		db = db.Order(OrderBy)
+		dbShowVideoList = dbShowVideoList.Order(OrderBy)
 
-		err := db.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
+		err := dbShowVideoList.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
 		// Limit得放前面才生效
 		if err != nil {
 			log.Logger.Error(err.Error())
@@ -132,15 +132,15 @@ func ShowVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interface
 		log.Logger.Debug("开始查询")
 		OrderBy := "published_at"
 		if QueryWebVideoInfo.From != "" {
-			db = db.Where("published_at > ?", QueryWebVideoInfo.From).
+			dbShowVideoList = dbShowVideoList.Where("published_at > ?", QueryWebVideoInfo.From).
 				Or("published_at = ?", QueryWebVideoInfo.From)
 		}
 		if QueryWebVideoInfo.To != "" {
-			db = db.Where("published_at < ?", QueryWebVideoInfo.To).
+			dbShowVideoList = dbShowVideoList.Where("published_at < ?", QueryWebVideoInfo.To).
 				Or("published_at = ?", QueryWebVideoInfo.To)
 		}
 		if QueryWebVideoInfo.Keyword != "" {
-			db = db.
+			dbShowVideoList = dbShowVideoList.
 				Where("title like ? ", QueryWebVideoInfo.Keyword+"%").
 				Or("title like ? ", "%"+QueryWebVideoInfo.Keyword).
 				Or("title like ? ", "%"+QueryWebVideoInfo.Keyword+"%")
@@ -151,8 +151,8 @@ func ShowVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interface
 			OrderBy = "published_at"
 		}
 
-		db = db.Order(OrderBy)
-		err := db.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
+		dbShowVideoList = dbShowVideoList.Order(OrderBy)
+		err := dbShowVideoList.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
 		if err != nil {
 			log.Logger.Error(err.Error())
 			return wholeResult
