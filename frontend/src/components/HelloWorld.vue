@@ -36,10 +36,10 @@
             <i class="el-icon-star-off"></i>
             <span slot="title">查看萌点</span>
           </el-menu-item>
-          <el-menu-item index="2">
-            <i class="el-icon-plus"></i>
-            <span slot="title">新增萌点</span>
-          </el-menu-item>
+<!--          <el-menu-item index="2">-->
+<!--            <i class="el-icon-plus"></i>-->
+<!--            <span slot="title">新增萌点</span>-->
+<!--          </el-menu-item>-->
 <!--          <el-button v-show="!IsLogin" size="mini" type="primary"  round @click="openLoginDialog = true">登录</el-button>-->
 <!--          <el-button v-show="IsLogin" size="mini"  round @click="openLogoutDialog = true">登出</el-button>-->
         </el-menu>

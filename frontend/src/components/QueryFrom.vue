@@ -234,6 +234,12 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if = "MobileIsPc"
+        prop="IntellectualPropertyName"
+        label="所属IP"
+        width="150">
+      </el-table-column>
+      <el-table-column
         fixed = "left"
         label="详细描述"
         width="230">

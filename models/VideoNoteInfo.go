@@ -31,6 +31,8 @@ type VideoNoteInfo struct {
 
 	User string `orm:"column(user);null" description:"提交人"`
 
+	IntellectualPropertyName string `orm:"column(intellectual_property_name);null" description:"所属ip"`
+
 	AddTime time.Time `orm:"column(add_time);type(datetime);null" description:"创建时间"`
 
 	UpdateTime time.Time `orm:"column(update_time);type(datetime);null" description:"更新时间"`

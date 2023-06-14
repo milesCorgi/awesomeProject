@@ -28,7 +28,7 @@ func ShowVideoInfo(c *gin.Context) {
 
 	log.Logger.Info(fmt.Sprintf("ShowVideoInfo req------------%v", QueryVideoInfo))
 	queryTable := map[string]interface{}{}
-
+	queryTable["enable"] = "1"
 	if QueryVideoInfo.BiliBiliID != "" {
 		queryTable["bili_bili_id"] = QueryVideoInfo.BiliBiliID
 	}
