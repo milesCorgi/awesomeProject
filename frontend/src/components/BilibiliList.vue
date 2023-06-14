@@ -273,8 +273,8 @@ export default {
           'to': this.filterPara.to,
           'keyword': this.filterPara.keyword,
           'ifDesc': this.filterPara.ifDesc ? '1' : '0'
-        },
-        {emulateJSON: true})
+        })
+        // {emulateJSON: true})
         .then((response) => {
           // console.log(response)
           let res = response.data

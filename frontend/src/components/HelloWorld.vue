@@ -40,8 +40,8 @@
             <i class="el-icon-plus"></i>
             <span slot="title">新增萌点</span>
           </el-menu-item>
-          <el-button v-show="!IsLogin" size="mini" type="primary"  round @click="openLoginDialog = true">登录</el-button>
-          <el-button v-show="IsLogin" size="mini"  round @click="openLogoutDialog = true">登出</el-button>
+<!--          <el-button v-show="!IsLogin" size="mini" type="primary"  round @click="openLoginDialog = true">登录</el-button>-->
+<!--          <el-button v-show="IsLogin" size="mini"  round @click="openLogoutDialog = true">登出</el-button>-->
         </el-menu>
       </div>
     <el-dialog title="登出" :visible.sync="openLogoutDialog" width="80%">

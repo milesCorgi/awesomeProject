@@ -104,68 +104,42 @@ func ShowVideoList(QueryWebVideoInfo dto.QueryWebVideoInfo) map[string]interface
 	wholeResult := map[string]interface{}{"error_num": 400, "msg": "获取萌点失败，请重试或者联系狗狗"}
 	// todo:做成分表
 	var VideoList []models.VideoList
-	log.Logger.Info(fmt.Sprintf("ShowWebVideoList req------------%v", QueryWebVideoInfo))
-	if QueryWebVideoInfo.From == "" && QueryWebVideoInfo.To == "" && QueryWebVideoInfo.Keyword == "" {
-		OrderBy := "published_at"
-		if QueryWebVideoInfo.IfDesc == "1" {
-			OrderBy = "published_at desc"
-		} else {
-			OrderBy = "published_at"
-		}
-		dbShowVideoList = dbShowVideoList.Order(OrderBy)
-
-		err := dbShowVideoList.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
-		// Limit得放前面才生效
-		if err != nil {
-			log.Logger.Error(err.Error())
-			return wholeResult
-		} else {
-			//for _, Video := range TwoSetVideoInfos {
-			//	logs.Debug(Video)
-			//}
-			wholeResult["total_num"] = len(VideoList)
-			wholeResult["info_list"] = VideoList
-			wholeResult["msg"] = "success"
-			wholeResult["error_num"] = 0
-		}
-	} else {
-		log.Logger.Debug("开始查询")
-		OrderBy := "published_at"
-		if QueryWebVideoInfo.From != "" {
-			dbShowVideoList = dbShowVideoList.Where("published_at > ?", QueryWebVideoInfo.From).
-				Or("published_at = ?", QueryWebVideoInfo.From)
-		}
-		if QueryWebVideoInfo.To != "" {
-			dbShowVideoList = dbShowVideoList.Where("published_at < ?", QueryWebVideoInfo.To).
-				Or("published_at = ?", QueryWebVideoInfo.To)
-		}
-		if QueryWebVideoInfo.Keyword != "" {
-			dbShowVideoList = dbShowVideoList.
-				Where("title like ? ", QueryWebVideoInfo.Keyword+"%").
-				Or("title like ? ", "%"+QueryWebVideoInfo.Keyword).
-				Or("title like ? ", "%"+QueryWebVideoInfo.Keyword+"%")
-		}
-		if QueryWebVideoInfo.IfDesc == "1" {
-			OrderBy = "-published_at"
-		} else {
-			OrderBy = "published_at"
-		}
-
-		dbShowVideoList = dbShowVideoList.Order(OrderBy)
-		err := dbShowVideoList.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId)).Find(&VideoList).Error
-		if err != nil {
-			log.Logger.Error(err.Error())
-			return wholeResult
-		} else {
-			//for _, info := range TwoSetVideoInfos {
-			//	logs.Info(info)
-			//}
-			wholeResult["total_num"] = len(VideoList)
-			wholeResult["info_list"] = VideoList
-			wholeResult["msg"] = "success"
-			wholeResult["error_num"] = 0
-		}
+	dbShowVideoList = dbShowVideoList.Debug().Where("source_id", int64(QueryWebVideoInfo.SourceId))
+	log.Logger.Debug("开始查询")
+	OrderBy := "published_at"
+	if QueryWebVideoInfo.IfDesc == "1" {
+		OrderBy = "published_at desc"
 	}
-	log.Logger.Info(fmt.Sprintf("ShowYoutubeVideoList resp------------%v", wholeResult))
+	dbShowVideoList = dbShowVideoList.Order(OrderBy)
+	if QueryWebVideoInfo.Keyword != "" {
+		dbShowVideoList = dbShowVideoList.
+			Where("title like ? ", QueryWebVideoInfo.Keyword+"%").
+			Or("title like ? ", "%"+QueryWebVideoInfo.Keyword).
+			Or("title like ? ", "%"+QueryWebVideoInfo.Keyword+"%")
+	}
+
+	if QueryWebVideoInfo.From != "" {
+		dbShowVideoList = dbShowVideoList.Where("published_at >= ?", QueryWebVideoInfo.From)
+	}
+	if QueryWebVideoInfo.To != "" {
+		dbShowVideoList = dbShowVideoList.Where("published_at <= ?", QueryWebVideoInfo.To)
+	}
+
+	log.Logger.Info(dbShowVideoList.Statement.SQL.String())
+	err := dbShowVideoList.Find(&VideoList).Error
+	if err != nil {
+		log.Logger.Error(err.Error())
+		return wholeResult
+	} else {
+		//for _, info := range TwoSetVideoInfos {
+		//	logs.Info(info)
+		//}
+		wholeResult["total_num"] = len(VideoList)
+		wholeResult["info_list"] = VideoList
+		wholeResult["msg"] = "success"
+		wholeResult["error_num"] = 0
+	}
+
+	//log.Logger.Info(fmt.Sprintf("ShowYoutubeVideoList resp------------%v", wholeResult))
 	return wholeResult
 }
