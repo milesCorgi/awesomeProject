@@ -1,20 +1,13 @@
 <template>
   <div>
     <p v-show="isAdmin">你好,管理员{{user.UserName}}</p>
-    <div style="margin-top: 10px">
-      <i class = "el-icon-copy-document"
-         v-clipboard:copy="lenternUrl"
-         v-clipboard:success="copy"></i>
-      或者你需要一个小手电:
-      <a href="javascript:;" @click="openUrl(lenternUrl)">{{ lenternUrl }}</a>
-    </div>
 
     <el-collapse style="border-color: white">
       <el-collapse-item style="width: 200px;margin-left: 30px;margin-right: 30px;margin-top: 10px" title="高级搜索">
         <el-row>
             <el-row type="flex" style="margin-top:10px" justify="center">
               <el-col>
-                <el-input  clearable v-model="filterPara.Info" placeholder="输入描述关键词">
+                <el-input  clearable v-model="filterPara.Info" placeholder="搜索描述">
                 </el-input>
               </el-col>
           </el-row>
@@ -53,16 +46,34 @@
       </el-row>
     </el-row>
     <el-row>
-      <el-row type="flex" style="margin-top:10px" justify="center">
+      <el-row  type="flex" style="margin-top:10px" justify="center">
+        <span style="margin-top:10px;font-size: small">所属ip：</span>
+        <el-select
+          v-model="filterPara.IntellectualPropertyName"
+          @change="getIntellectualPropertyName()"
+          clearable
+          filterable
+          placeholder="所属ip">
+          <el-option
+            v-for="item in intellectualPropertyNames"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-row>
+    </el-row>
+    <el-row>
+      <el-row v-show="notShowIfNull(filterPara.IntellectualPropertyName)" type="flex" style="margin-top:10px" justify="center">
         <span style="margin-top:10px;font-size: small">关键词：</span>
         <el-select
           v-model="filterPara.keyword"
-          @focus="getKayWordsToShow()"
+          @focus="getKeyWordsToShow()"
           clearable
           filterable
           placeholder="关键词">
           <el-option
-            v-for="item in options"
+            v-for="item in keywords"
             :key="item.value"
             :label="item.label"
             :value="item.value">
@@ -173,7 +184,7 @@
                    class = "el-icon-copy-document"
                    v-clipboard:copy="item.value"
                    v-clipboard:success="copy"></i>
-                <span>←复制图链</span>
+                <span >←复制图链</span>
               </div>
               <div style="display: inline-block;text-align: center">
                 <el-image
@@ -352,12 +363,14 @@ export default {
   },
   data () {
     return {
-      options: [],
-      allOptions: [],
+      intellectualPropertyNames: [],
+      keywords: [],
+      allkeywords: [],
       isAdmin: false,
       lenternUrl: 'https://github.com/getlantern/lantern',
       loading: true,
       filterPara: {
+        IntellectualPropertyName: '',
         keyword: '',
         Info: '',
         BiliBiliID: '',
@@ -387,8 +400,10 @@ export default {
       this.PagerCount = 5
       this.PagerIsSmall = true
     }
-    this.getKeyWords()
+    this.getIntellectualPropertyNames()
     this.user.UserName = storage.get('two-set-info-username')
+    this.filterPara.IntellectualPropertyName = storage.get('awesomeProject-intellectualPropertyNames')
+    this.getKeyWords()
     console.log(this.user.UserName)
     if (this.user.UserName !== undefined || this.user.UserName !== '') {
       this.IsLogin = true
@@ -404,40 +419,57 @@ export default {
     }
   },
   methods: {
-    getKayWordsToShow () {
-      // console.log('执行')
-      this.options = []
-      var keywordList = []
-      for (let indexOfkeyWord = 0; indexOfkeyWord < this.allOptions.length; indexOfkeyWord++) {
-        // console.log(this.allOptions[indexOfkeyWord])
-        if (this.filterPara.InfoType === '') {
-          if (keywordList.indexOf(this.allOptions[indexOfkeyWord].value) === -1) {
-            keywordList.push(this.allOptions[indexOfkeyWord].value)
-            this.options.push(this.allOptions[indexOfkeyWord])
-          }
-        } else {
-          if (this.allOptions[indexOfkeyWord].InfoType === this.filterPara.InfoType) {
-            this.options.push(this.allOptions[indexOfkeyWord])
-          }
-        }
-      }
+    getIntellectualPropertyName () {
+      // console.log('here')
+      this.allkeywords = []
+      storage.set('awesomeProject-intellectualPropertyNames', this.filterPara.IntellectualPropertyName)
+      this.getKeyWords()
     },
-    getKeyWords () {
-      this.$http.post('/api/get_keywords')
+    getIntellectualPropertyNames () {
+      this.$http.post('/api/get_intellectual_property_names')
         .then((response) => {
           // console.log(response)
           let res = response.data
-          this.options = []
-          this.allOptions = []
+          this.intellectualPropertyNames = []
+          if (res.error_num === 0) {
+            for (let indexOfIntellectualPropertyNames = 0; indexOfIntellectualPropertyNames < res.intellectual_property_name_list.length; indexOfIntellectualPropertyNames++) {
+              this.intellectualPropertyNames.push({
+                value: res.intellectual_property_name_list[indexOfIntellectualPropertyNames].IntellectualPropertyNames,
+                label: res.intellectual_property_name_list[indexOfIntellectualPropertyNames].IntellectualPropertyNames
+              })
+            }
+            console.log('this.intellectualPropertyNames', this.intellectualPropertyNames)
+            console.log('res.intellectual_property_name_list', res.intellectual_property_name_list)
+          } else {
+            this.$message.error(res['msg'])
+          }
+        })
+    },
+    getKeyWordsToShow () {
+      this.keywords = []
+      this.getKeyWords()
+      console.log('执行')
+      this.keywords = this.allkeywords
+    },
+    getKeyWords () {
+      this.$http.post('/api/get_keywords',
+        {
+          'IntellectualPropertyName': this.filterPara.IntellectualPropertyName
+        })
+        .then((response) => {
+          // console.log(response)
+          let res = response.data
+          // this.keywords = []
+          this.allkeywords = []
           if (res.error_num === 0) {
             for (let indexOfkeyWord = 0; indexOfkeyWord < res.keyWord_list.length; indexOfkeyWord++) {
-              this.allOptions.push({
+              this.allkeywords.push({
                 value: res.keyWord_list[indexOfkeyWord].KeyWord,
                 label: res.keyWord_list[indexOfkeyWord].KeyWord,
                 InfoType: res.keyWord_list[indexOfkeyWord].InfoType
               })
             }
-            // console.log('this.allOptions', this.allOptions)
+            // console.log('this.allkeywords', this.allkeywords)
             // console.log('res.keyWord_list', res.keyWord_list)
           } else {
             this.$message.error(res['msg'])
@@ -484,6 +516,7 @@ export default {
       this.filterPara.OtherLink = ''
       this.filterPara.InfoType = ''
       this.filterPara.keyword = ''
+      this.filterPara.IntellectualPropertyName = ''
     },
     disableThisInfo (id) {
       let canDisable = true
@@ -533,7 +566,8 @@ export default {
           'BiliBiliID': this.filterPara.BiliBiliID,
           'YoutubeLink': this.filterPara.YoutubeLink,
           'OtherLink': this.filterPara.OtherLink,
-          'InfoType': this.filterPara.InfoType
+          'InfoType': this.filterPara.InfoType,
+          'IntellectualPropertyName': this.filterPara.IntellectualPropertyName
         })
         .then((response) => {
           console.log(response)
