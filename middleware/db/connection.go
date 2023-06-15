@@ -17,7 +17,7 @@ var (
 func InitDb(cfg *ini.File) {
 
 	cfgSection := cfg.Section("database")
-	dbInfo := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true",
+	dbInfo := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=true",
 		cfgSection.Key("User"),
 		cfgSection.Key("Password"),
 		cfgSection.Key("Host"),

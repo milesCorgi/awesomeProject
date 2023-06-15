@@ -44,6 +44,9 @@ func ShowVideoInfo(c *gin.Context) {
 	if QueryVideoInfo.KeyWord != "" {
 		queryTable["keyword"] = QueryVideoInfo.KeyWord
 	}
+	if QueryVideoInfo.IntellectualPropertyName != "" {
+		queryTable["intellectual_property_name"] = QueryVideoInfo.IntellectualPropertyName
+	}
 	db = db.Where(queryTable)
 	// 读取所有数据
 	wholeResult := map[string]interface{}{"error_num": 400, "msg": "获取萌点失败，请重试或者联系狗狗"}

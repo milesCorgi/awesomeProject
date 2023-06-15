@@ -13,4 +13,6 @@ func LoadServerCoreRouter(r *gin.Engine) {
 	r.POST("/api/query_bilibili_video_list", handles.ShowBiliBiliVideoList)
 
 	r.POST("/api/get_keywords", handles.GetKeyWord)
+
+	r.POST("/api/get_intellectual_property_names", handles.GetIntellectualPropertyNames)
 }
