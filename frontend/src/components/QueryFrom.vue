@@ -455,29 +455,31 @@ export default {
       this.keywords = this.allkeywords
     },
     getKeyWords () {
-      this.$http.post('/api/get_keywords',
-        {
-          'IntellectualPropertyName': this.filterPara.IntellectualPropertyName
-        })
-        .then((response) => {
-          // console.log(response)
-          let res = response.data
-          // this.keywords = []
-          this.allkeywords = []
-          if (res.error_num === 0) {
-            for (let indexOfkeyWord = 0; indexOfkeyWord < res.keyWord_list.length; indexOfkeyWord++) {
-              this.allkeywords.push({
-                value: res.keyWord_list[indexOfkeyWord].KeyWord,
-                label: res.keyWord_list[indexOfkeyWord].KeyWord,
-                InfoType: res.keyWord_list[indexOfkeyWord].InfoType
-              })
+      if (this.filterPara.IntellectualPropertyName !== undefined && this.filterPara.IntellectualPropertyName !== '') {
+        this.$http.post('/api/get_keywords',
+          {
+            'IntellectualPropertyName': this.filterPara.IntellectualPropertyName
+          })
+          .then((response) => {
+            // console.log(response)
+            let res = response.data
+            // this.keywords = []
+            this.allkeywords = []
+            if (res.error_num === 0) {
+              for (let indexOfkeyWord = 0; indexOfkeyWord < res.keyWord_list.length; indexOfkeyWord++) {
+                this.allkeywords.push({
+                  value: res.keyWord_list[indexOfkeyWord].KeyWord,
+                  label: res.keyWord_list[indexOfkeyWord].KeyWord,
+                  InfoType: res.keyWord_list[indexOfkeyWord].InfoType
+                })
+              }
+              // console.log('this.allkeywords', this.allkeywords)
+              // console.log('res.keyWord_list', res.keyWord_list)
+            } else {
+              this.$message.error(res['msg'])
             }
-            // console.log('this.allkeywords', this.allkeywords)
-            // console.log('res.keyWord_list', res.keyWord_list)
-          } else {
-            this.$message.error(res['msg'])
-          }
-        })
+          })
+      }
     },
     infoTypeStyle (val) {
       const dist = {
@@ -520,6 +522,7 @@ export default {
       this.filterPara.InfoType = ''
       this.filterPara.keyword = ''
       this.filterPara.IntellectualPropertyName = ''
+      storage.set('awesomeProject-intellectualPropertyNames', this.filterPara.IntellectualPropertyName)
     },
     disableThisInfo (id) {
       let canDisable = true
