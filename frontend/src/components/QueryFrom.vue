@@ -184,7 +184,7 @@
                    class = "el-icon-copy-document"
                    v-clipboard:copy="item.value"
                    v-clipboard:success="copy"></i>
-                <span >←复制图链</span>
+                <span>←复制图链</span>
               </div>
               <div style="display: inline-block;text-align: center">
                 <el-image
@@ -403,6 +403,10 @@ export default {
     this.getIntellectualPropertyNames()
     this.user.UserName = storage.get('two-set-info-username')
     this.filterPara.IntellectualPropertyName = storage.get('awesomeProject-intellectualPropertyNames')
+    console.log('jfiudfhgi' + this.filterPara.IntellectualPropertyName)
+    if (this.filterPara.IntellectualPropertyName === undefined) {
+      this.filterPara.IntellectualPropertyName = ''
+    }
     this.getKeyWords()
     console.log(this.user.UserName)
     if (this.user.UserName !== undefined || this.user.UserName !== '') {
@@ -420,7 +424,6 @@ export default {
   },
   methods: {
     getIntellectualPropertyName () {
-      // console.log('here')
       this.allkeywords = []
       storage.set('awesomeProject-intellectualPropertyNames', this.filterPara.IntellectualPropertyName)
       this.getKeyWords()
