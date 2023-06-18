@@ -565,7 +565,7 @@ export default {
       this.loading = true
       this.page.totalNum = 0
       this.page.currentPage = 1
-      this.$http.post('/api/query_two_set_video_info',
+      this.$http.post('/api/query_video_info',
         {
           'KeyWord': this.filterPara.keyword,
           'Info': this.filterPara.Info,
@@ -660,7 +660,6 @@ export default {
             })
         }
       }
-      console.log(this.showList)
     }
   }
 }

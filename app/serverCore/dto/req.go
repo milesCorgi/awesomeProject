@@ -1,13 +1,18 @@
 package dto
 
-type QueryVideoInfo struct {
+type VideoInfo struct {
 	Info                     string `json:"Info" xml:"Info"`
 	BiliBiliID               string `json:"BiliBiliID" xml:"BiliBiliID"`
+	BiliBiliLink             string `json:"BiliBiliLink" xml:"BiliBiliLink"`
 	YoutubeLink              string `json:"YoutubeLink" xml:"YoutubeLink"`
 	OtherLink                string `json:"OtherLink" xml:"OtherLink"`
+	FanFictionLink           string `json:"FanFictionLink" xml:"FanFictionLink"`
 	InfoType                 string `json:"InfoType" xml:"InfoType"`
 	KeyWord                  string `json:"KeyWord" xml:"KeyWord"`
+	ImgLinks                 string `json:"ImgLinks" xml:"ImgLinks"`
 	IntellectualPropertyName string `json:"IntellectualPropertyName" xml:"IntellectualPropertyName"`
+	User                     string `json:"User" xml:"User"`
+	EditPassWord             string `json:"EditPassWord" xml:"EditPassWord"`
 }
 
 type QueryWebVideoInfo struct {

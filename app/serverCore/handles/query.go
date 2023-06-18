@@ -16,7 +16,7 @@ func PingHander(c *gin.Context) {
 
 func ShowVideoInfo(c *gin.Context) {
 	var videoNoteInfos []models.VideoNoteInfo
-	var QueryVideoInfo dto.QueryVideoInfo
+	var QueryVideoInfo dto.VideoInfo
 	bindJSONErr := c.ShouldBindJSON(&QueryVideoInfo)
 	db := db.DB
 	// 过滤器得初始化才行
@@ -42,7 +42,7 @@ func ShowVideoInfo(c *gin.Context) {
 		queryTable["info_type"] = QueryVideoInfo.InfoType
 	}
 	if QueryVideoInfo.KeyWord != "" {
-		queryTable["keyword"] = QueryVideoInfo.KeyWord
+		queryTable["key_word"] = QueryVideoInfo.KeyWord
 	}
 	if QueryVideoInfo.IntellectualPropertyName != "" {
 		queryTable["intellectual_property_name"] = QueryVideoInfo.IntellectualPropertyName

@@ -2,7 +2,7 @@
   <div align="center">
     <strong v-show="!IsLogin" >请先登录</strong>
     <div v-show="IsLogin">
-      <p><strong style="font-size:12px" >{{user.UserName}}你好。</strong></p>
+<!--      <p><strong style="font-size:12px" >{{user.UserName}}你好。</strong></p>-->
       <el-form ref="form" :model="form" label-width="130px" label-position="left">
 
         <el-form-item label="是否显示指引">
@@ -22,9 +22,25 @@
             </el-radio-group>
           </div>
         </el-form-item>
-
+        <el-form-item label="所属ip">
+          <div style="text-align: left">
+            <el-select
+              v-model="form.IntellectualPropertyName"
+              @change="getIntellectualPropertyName()"
+              clearable
+              filterable
+              placeholder="所属ip">
+              <el-option
+                v-for="item in intellectualPropertyNames"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+        </el-form-item>
         <p v-show="showTips" style="font-size:10px" > ↓可选择萌点关键词,没有的话双击箭头手动输入</p>
-        <el-form-item label="关键词">
+        <el-form-item v-show="notShowIfNull(form.IntellectualPropertyName)" label="关键词">
           <div style="text-align: left">
             <el-select
               v-model="keyword"
@@ -123,12 +139,14 @@
 </template>
 
 <script>
-import storage from 'good-storage'
+// import storage from 'good-storage'
+
 export default {
   name: 'addForm',
   data () {
     return {
-      IsLogin: false,
+      intellectualPropertyNames: [],
+      IsLogin: true,
       showTips: true,
       submitDisable: false,
       keyword: '',
@@ -143,6 +161,7 @@ export default {
         EditPassWord: '',
         InfoType: '0',
         FanFictionLink: '',
+        IntellectualPropertyName: '',
         ImgLinks: [{
           value: ''
         }]
@@ -156,27 +175,29 @@ export default {
     }
   },
   created () {
-    this.user.UserName = storage.get('two-set-info-username')
-    console.log(this.user.UserName)
-    if (this.user.UserName !== undefined && this.user.UserName !== '') {
-      this.IsLogin = true
-    }
+    // 先干掉登录态检查
+    // this.user.UserName = storage.get('two-set-info-username')
+    // console.log(this.user.UserName)
+    // if (this.user.UserName !== undefined && this.user.UserName !== '') {
+    //   this.IsLogin = true
+    // }
+    this.getIntellectualPropertyNames()
     this.getKeyWords()
   },
   methods: {
+    notShowIfNull (val) {
+      return val.length !== 0
+    },
     isMobile () {
       let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
       return flag
     },
     getKayWordsToShow () {
-      console.log('执行')
       this.options = []
-      for (let indexOfkeyWord = 0; indexOfkeyWord < this.allOptions.length; indexOfkeyWord++) {
-        console.log(this.allOptions[indexOfkeyWord])
-        if (this.allOptions[indexOfkeyWord].InfoType === this.form.InfoType) {
-          this.options.push(this.allOptions[indexOfkeyWord])
-        }
-      }
+      this.getKeyWords()
+      console.log('执行')
+      this.options = this.allOptions
+      console.log('this.intellectualPropertyNames', this.options)
     },
     addTheKeyWord () {
       var addTheKeyWord = true
@@ -188,6 +209,9 @@ export default {
       }
       if (this.keyword === '') {
         addTheKeyWord = false
+      }
+      if (this.user.UserName === undefined || this.user.UserName === '') {
+        this.user.UserName = '路过围观人员'
       }
       console.log('addTheKeyWord', addTheKeyWord)
       if (addTheKeyWord) {
@@ -208,12 +232,38 @@ export default {
           })
       }
     },
+    getIntellectualPropertyName () {
+      this.allOptions = []
+      this.getKeyWords()
+    },
+    getIntellectualPropertyNames () {
+      this.$http.post('/api/get_intellectual_property_names')
+        .then((response) => {
+          // console.log(response)
+          let res = response.data
+          this.intellectualPropertyNames = []
+          if (res.error_num === 0) {
+            for (let indexOfIntellectualPropertyNames = 0; indexOfIntellectualPropertyNames < res.intellectual_property_name_list.length; indexOfIntellectualPropertyNames++) {
+              this.intellectualPropertyNames.push({
+                value: res.intellectual_property_name_list[indexOfIntellectualPropertyNames].IntellectualPropertyNames,
+                label: res.intellectual_property_name_list[indexOfIntellectualPropertyNames].IntellectualPropertyNames
+              })
+            }
+            console.log('this.intellectualPropertyNames', this.intellectualPropertyNames)
+            console.log('res.intellectual_property_name_list', res.intellectual_property_name_list)
+          } else {
+            this.$message.error(res['msg'])
+          }
+        })
+    },
     getKeyWords () {
-      this.$http.post('/api/get_keywords')
+      this.$http.post('/api/get_keywords', {
+        'IntellectualPropertyName': this.form.IntellectualPropertyName
+      })
         .then((response) => {
           console.log(response)
           let res = response.data
-          this.options = []
+          // this.options = []
           this.allOptions = []
           if (res.error_num === 0) {
             for (let indexOfkeyWord = 0; indexOfkeyWord < res.keyWord_list.length; indexOfkeyWord++) {
@@ -223,8 +273,8 @@ export default {
                 InfoType: res.keyWord_list[indexOfkeyWord].InfoType
               })
             }
-            // console.log('this.allOptions', this.allOptions)
-            // console.log('res.keyWord_list', res.keyWord_list)
+            console.log('this.allOptions', this.allOptions)
+            console.log('res.keyWord_list', res.keyWord_list)
           } else {
             this.$message.error(res['msg'])
           }
@@ -252,12 +302,12 @@ export default {
           this.imgLinksStr = this.imgLinksStr + '\n'
         }
       }
-      console.log(this.imgLinksStr)
+      console.log('this.imgLinksStr' + this.imgLinksStr)
       let canAdd = true
-      if (this.user.UserName === undefined || this.user.UserName === '') {
-        canAdd = false
-        this.$message.warning('请重新登录')
-      }
+      // if (this.user.UserName === undefined || this.user.UserName === '') {
+      //   canAdd = false
+      //   this.$message.warning('请重新登录')
+      // }
       if (this.form.Info === '') {
         canAdd = false
         this.$message.warning('描述不可为空')
@@ -284,7 +334,7 @@ export default {
         // this.$http.post('/api/add_two_set_video_info',
         // console.log(this.keyword === '')
         // console.log(this.keyword === '' ? this.form.Info : '【' + this.keyword + '】' + this.form.Info)
-        this.$http.post('/api/add_two_set_video_info',
+        this.$http.post('/api/add_video_info',
           {
             'Info': this.keyword === '' ? this.form.Info : '【' + this.keyword + '】' + this.form.Info,
             'TheTime': this.form.TheTime,
@@ -297,9 +347,9 @@ export default {
             'ImgLinks': this.imgLinksStr,
             'InfoType': this.form.InfoType,
             'FanFictionLink': this.form.FanFictionLink,
-            'User': this.user.UserName
-          },
-          {emulateJSON: true})
+            'User': this.user.UserName,
+            'IntellectualPropertyName': this.form.IntellectualPropertyName
+          })
           .then((response) => {
             console.log(response)
             let res = response.data

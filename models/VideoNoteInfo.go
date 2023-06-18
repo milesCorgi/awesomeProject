@@ -1,13 +1,11 @@
 package models
 
-import "time"
-
 type VideoNoteInfo struct {
 	Id int `orm:"column(id);auto"`
 
 	Info string `orm:"column(info);type(text);null" description:"'详细描述'"`
 
-	KeyWord string `orm:"column(keyword);null" description:"'关键词'"`
+	KeyWord string `orm:"column(key_word);null" description:"'关键词'"`
 
 	TheTime string `orm:"column(the_time);null" description:"在该视频的哪个时段"`
 
@@ -33,7 +31,7 @@ type VideoNoteInfo struct {
 
 	IntellectualPropertyName string `orm:"column(intellectual_property_name);null" description:"所属ip"`
 
-	AddTime time.Time `orm:"column(add_time);type(datetime);null" description:"创建时间"`
+	AddTime string `orm:"column(add_time);type(datetime);null" description:"创建时间"`
 
-	UpdateTime time.Time `orm:"column(update_time);type(datetime);null" description:"更新时间"`
+	UpdateTime string `orm:"column(update_time);type(datetime);null" description:"更新时间"`
 }
