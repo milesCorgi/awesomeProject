@@ -32,7 +32,7 @@ func ShowVideoInfo(c *gin.Context) {
 	if QueryVideoInfo.BiliBiliID != "" {
 		queryTable["bili_bili_id"] = QueryVideoInfo.BiliBiliID
 	}
-	if QueryVideoInfo.BiliBiliID != "" {
+	if QueryVideoInfo.YoutubeLink != "" {
 		queryTable["youtube_link"] = QueryVideoInfo.YoutubeLink
 	}
 	if QueryVideoInfo.OtherLink != "" {
