@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"awesomeProject/app/cache"
+	"awesomeProject/app/serverCore"
 	"awesomeProject/app/serverCore/handles"
-	"awesomeProject/app/serverCore/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +14,7 @@ func SetupRouter() *gin.Engine {
 
 	// Ping test
 	r.GET("/ping", handles.PingHander)
-	routes.LoadServerCoreRouter(r)
+	serverCore.LoadServerCoreRouter(r)
+	cache.LoadCacheRouter(r)
 	return r
 }

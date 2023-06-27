@@ -1,6 +1,7 @@
 package main
 
 import (
+	"awesomeProject/cron"
 	"awesomeProject/middleware/db"
 	"awesomeProject/middleware/log"
 	"awesomeProject/routes"
@@ -34,6 +35,9 @@ func main() {
 			}
 		}(db)
 	}
+
+	// 定时任务on
+	cron.RunCron()
 	// 加载路由
 	r := routes.SetupRouter()
 	// 去除You trusted all proxies, this is NOT safe. 告警

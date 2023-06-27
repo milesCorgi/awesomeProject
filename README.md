@@ -10,7 +10,7 @@
 
 # 选型
 
-gin ： web框架，比beego精简。是有中文文档的：https://gin-gonic.com/zh-cn/docs/  
+*web框架* ： gin，比beego精简。是有中文文档的：https://gin-gonic.com/zh-cn/docs/  
 
 当然也有很多这样的中文教程：
 
@@ -20,22 +20,30 @@ https://zhuanlan.zhihu.com/p/614838910
 
 gin 路由获取get post请求参数 : https://zhuanlan.zhihu.com/p/474758711
 
-Gorm ： gorm是一个使用Go语言编写的ORM框架。它文档齐全，对开发者友好，支持主流数据库。  
+*ORM框架* ： gorm，这是一个使用Go语言编写的ORM框架。它文档齐全，对开发者友好，支持主流数据库。  
 有中文文档：https://gorm.io/zh_CN/docs/  
 
-数据库分表： Sharding
+*数据库分表*： Sharding
 中文说明https://gorm.io/zh_CN/docs/sharding.html
 
 Go-validator ： 代码层面的一个校验脚手架
 
-日志打印：zap
+*日志打印*：zap
 
 https://segmentfault.com/a/1190000022461706
 https://www.cnblogs.com/you-men/p/14694928.html#_label4
 
-定时任务：https://github.com/xxl-job/xxl-job-executor-go  我们熟悉的xxl-job
+*定时任务*：
 
-单元测试：
+我们熟悉的xxl-job
+
+https://github.com/xxl-job/xxl-job-executor-go  
+
+cron ： 服务自己的一些定时事务，用这个也行（搭xxl-job也是要钱的）
+
+https://darjun.github.io/2020/06/25/godailylib/cron/
+
+*单元测试*：
 还不熟，考虑以下两个
 
 gomock  https://github.com/golang/mock
@@ -43,6 +51,18 @@ gomock  https://github.com/golang/mock
 Mockey https://github.com/bytedance/mockey
 
 ↑这个还有点像mockito
+
+*本地缓存*：用这个方案造了个本地缓存（因为买redis要钱）（实际改用了读写锁）
+
+https://www.jianshu.com/p/f95fb8f0f737
+
+读写锁的科普
+
+https://www.jianshu.com/p/679041bdaa39
+
+选锁总结：
+- Mutex（互斥锁）适用于读写不确定，并且只有一个读或者写的场景
+- RWMutex（读写锁）适用于读多写少的场景（业务代码应该用这个会更多）
 
 # TodoList
 

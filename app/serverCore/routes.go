@@ -1,4 +1,4 @@
-package routes
+package serverCore
 
 import (
 	"awesomeProject/app/serverCore/handles"
